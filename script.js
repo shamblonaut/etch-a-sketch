@@ -6,6 +6,10 @@ grid.style.width = `${resolution}px`;
 const changeCanvasSizeButton = document.querySelector('.change-canvas-size');
 const canvasSizeText = document.querySelector('.canvas-size');
 
+function random(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function createCanvas(size) {
 	for(let i = 0; i < size; i++) {
 		const row = document.createElement('div');
@@ -16,7 +20,17 @@ function createCanvas(size) {
 			square.style.width = `${resolution / size}px`;
 			square.style.height = `${resolution / size}px`;
 
-			square.addEventListener('mouseover', () => square.style.backgroundColor = 'black');
+			let opacity = 255;
+
+			square.addEventListener('mouseover', () => {
+				let red = random(0, opacity);
+				let green = random(0, opacity);
+				let blue = random(0, opacity);
+				square.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+				if(opacity > 0) {
+					opacity -= 28;
+				}
+			});
 
 			row.appendChild(square);
 		}
@@ -28,12 +42,13 @@ function createCanvas(size) {
 createCanvas(16);
 
 changeCanvasSizeButton.addEventListener('click', () => {
-	while(grid.firstChild) {
-		grid.removeChild(grid.firstChild);
-	}
 	let newSize;
 	do {
 		newSize = Number(prompt('Please enter the new canvas size(1-100):'));
 	} while(newSize < 1 || newSize > 100 );
+
+	while(grid.firstChild) {
+		grid.removeChild(grid.firstChild);
+	}
 	createCanvas(newSize);
 });
